@@ -1,73 +1,95 @@
-// Write game() function that act as initializer for the game
-game();
+let counter = 0;
+let userScore = 0;
+let computerScore = 0;
+
+const result = document.querySelector(".result");
+const beginButton = document.querySelector(".begin");
+beginButton.addEventListener("click", () => {
+    beginButton.remove();
+    game();
+});
 
 function game() {
-    let counter = 0;
-    let userScore = 0;
-    let computerScore = 0;
+    const resultContainer = document.querySelector(".result");
+    const container = document.querySelector(".container");
+    const rockButton = document.createElement("button");
+    const paperButton = document.createElement("button");
+    const scissorsButton = document.createElement("button");
+    rockButton.textContent = "🪨";
+    paperButton.textContent = "📃";
+    scissorsButton.textContent = "✂️";
+    rockButton.classList.add("rock");
+    paperButton.classList.add("paper");
+    scissorsButton.classList.add("scissors");
+    rockButton.title = "Rock";
+    paperButton.title = "Paper";
+    scissorsButton.title = "Scissors";
 
-    // Begin while loop inside game()
-    while(true) {
-        // Init userPick variable with getUserChoice() function, return string
-        let userChoice = getUserChoice();
-        // Init computerPick variable with getComputerChoice() function, return string
+    rockButton.addEventListener("click", () => {
+        let userChoice = "Rock";
         let computerChoice = getComputerChoice();
 
-        // Compare userChoice to computerChoice
-        if (userChoice.match(computerChoice)) { // If userChoice === computerChoice, output a tie
-            alert(`It's a tie!\n${userScore} - ${computerScore}`);
-        } else if (userChoice === "Rock" && computerChoice === "Paper") { // Else if userChoice < computerChoice, output computer has won
-            computerScore++; // Store result to userScore or computerScore
-            alert(`Computer beats user with: ${computerChoice} vs ${userChoice}\n${userScore} - ${computerScore}`)
-        } else if (userChoice === "Rock" && computerChoice === "Scissors") { // Else userChoice > computerChoice, output user has won 
-            userScore++; 
-            alert(`User beats Computer with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`)
-        } else if (userChoice === "Paper" && computerChoice === "Rock") { // Else userChoice > computerChoice, output user has won 
-            userScore++; 
-            alert(`User beats Computer with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`)
-        } else if (userChoice === "Paper" && computerChoice === "Scissors") { // Else if userChoice < computerChoice, output computer has won
+        if (userChoice.match(computerChoice)) { 
+            resultContainer.textContent = `It's a tie!\n${userScore} - ${computerScore}`;
+        } else if (userChoice === "Rock" && computerChoice === "Paper") { 
             computerScore++; 
-            alert(`Computer beats user with: ${computerChoice} vs ${userChoice}\n${userScore} - ${computerScore}`)
-        } else if (userChoice === "Scissors" && computerChoice === "Rock") { // Else if userChoice < computerChoice, output computer has won
-            computerScore++;
-            alert(`Computer beats user with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`)
-        } else if (userChoice === "Scissors" && computerChoice === "Paper") { // Else userChoice > computerChoice, output user has won 
-            userScore++;
-            alert(`User beats Computer with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`)
+            resultContainer.textContent = `Computer beats user with: ${computerChoice} vs ${userChoice}\n${userScore} - ${computerScore}`;
+        } else if (userChoice === "Rock" && computerChoice === "Scissors") {  
+            userScore++; 
+            resultContainer.textContent = `User beats Computer with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`;
         }
 
         counter++;
         if (counter >= 5) { // End loop if counter reaches 5
-            break;
+            calculateResult(userScore, computerScore);
         }
-    }
+    });
 
-    if (userScore == computerScore) {
-        alert(`It's a tie! \nuser: ${userScore} - computer: ${computerScore}`);
-    } else if (userScore < computerScore) {
-        alert(`Computer has won: ${userScore} - ${computerScore}`);
-    } else {
-        alert(`User has won: ${userScore} - ${computerScore}`)
-    }
+    paperButton.addEventListener("click", () => {
+        let userChoice = "Paper";
+        let computerChoice = getComputerChoice();
+
+        if (userChoice.match(computerChoice)) { 
+            resultContainer.textContent = `It's a tie!\n${userScore} - ${computerScore}`;
+        } else if (userChoice === "Paper" && computerChoice === "Rock") {  
+            userScore++; 
+            resultContainer.textContent = `User beats Computer with: ${userChoice} vs ${computerChoice}\r\n${userScore} - ${computerScore}`;
+        } else if (userChoice === "Paper" && computerChoice === "Scissors") { 
+            computerScore++; 
+            resultContainer.textContent = `Computer beats user with: ${computerChoice} vs ${userChoice}\n${userScore} - ${computerScore}`;
+        }
+
+        counter++;
+        if (counter >= 5) { // End loop if counter reaches 5
+            calculateResult(userScore, computerScore);
+        }
+    });
+
+    scissorsButton.addEventListener("click", () => {
+        let userChoice = "Scissors";
+        let computerChoice = getComputerChoice();
+
+        if (userChoice.match(computerChoice)) { 
+            resultContainer.textContent = `It's a tie!\n${userScore} - ${computerScore}`;
+        } else if (userChoice === "Scissors" && computerChoice === "Rock") { 
+            computerScore++;
+            resultContainer.textContent = `Computer beats user with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`;
+        } else if (userChoice === "Scissors" && computerChoice === "Paper") { 
+            userScore++;
+            resultContainer.textContent = `User beats Computer with: ${userChoice} vs ${computerChoice}\n${userScore} - ${computerScore}`;
+        }
+
+        counter++;
+        if (counter >= 5) { // End loop if counter reaches 5
+            calculateResult(userScore, computerScore);
+        }
+    })
+
+    container.appendChild(rockButton);
+    container.appendChild(paperButton);
+    container.appendChild(scissorsButton);
 }
 
-// Write getUserChoice() that returns desired user choice
-function getUserChoice() {
-    while (true) {
-        let input = Number(prompt("Type 1 for Rock, 2 for Paper, and 3 for Scissors"));
-        if (input === 1) {
-            return "Rock";
-        } else if (input === 2) {
-            return "Paper";
-        } else if (input === 3){
-            return "Scissors";
-        } else {
-            continue;
-        }
-    }
-}
-
-// Write getComputerChoice(), generate random number for rock, paper, scissors
 function getComputerChoice() {
     let computerChoice = Math.floor(Math.random() * 3);
 
@@ -80,10 +102,36 @@ function getComputerChoice() {
     }
 }
 
+function calculateResult(userScoreLocal, computerScoreLocal) {
+    const rockButton = document.querySelector(".rock");
+    const paperButton = document.querySelector(".paper");
+    const scissorsButton = document.querySelector(".scissors");
+    rockButton.remove();
+    paperButton.remove();
+    scissorsButton.remove();
 
+    if (userScoreLocal == computerScoreLocal) {
+        document.querySelector(".result").textContent = `It's a tie!\nuser: ${userScoreLocal} - computer: ${computerScoreLocal}`;
+    } else if (userScoreLocal < computerScoreLocal) {
+        document.querySelector(".result").textContent = `Computer has won:\n${userScoreLocal} - ${computerScoreLocal}`;
+    } else {
+        document.querySelector(".result").textContent = `User has won:\n${userScoreLocal} - ${computerScoreLocal}`
+    }
 
+    const playAgainButton = document.createElement("button");
+    playAgainButton.classList.add("play-again")
+    playAgainButton.textContent = "Play again?";
+    playAgainButton.addEventListener("click", resetGame);
 
+    const container = document.querySelector(".container");
+    container.appendChild(playAgainButton);
+}
 
-
-
-
+function resetGame() {
+    counter = 0;    
+    userScore = 0;
+    computerScore = 0;
+    document.querySelector(".result").textContent = "";
+    document.querySelector("button").remove();
+    game();
+}
